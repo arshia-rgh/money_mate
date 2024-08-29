@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
-import firebase_config
+import app.firebase_config
 from firebase_admin import auth
-from schemas.user import UserLogin, UserCreate
+from app.schemas.user import UserLogin, UserCreate
 
 app = FastAPI()
 
