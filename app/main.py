@@ -17,3 +17,8 @@ async def signup(user: UserCreate):
         return {"message": "User created successfully", "uid": user_record.uid}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/login")
+async def login(user: UserLogin):
+    pass
