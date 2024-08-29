@@ -79,6 +79,7 @@ async def update_user(user_id: str, user: UserCreate, current_user: dict):
         if exists_user["uid"] != current_user["uid"]:
             raise HTTPException(status_code=403, detail="You can only edit your own account not others")
 
+        user.updated_at = datetime.now()
         user_ref.update(user.model_dump())
         return {"message": "Your account has been updated successfully"}
     except Exception as e:
