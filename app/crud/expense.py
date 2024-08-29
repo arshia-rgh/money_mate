@@ -9,7 +9,8 @@ from app.schemas.expense import Expense
 async def add_expense(expense: Expense, current_user: dict):
     try:
         expense.user_id = current_user["uid"]
-        expense.date = datetime.now()
+        expense.created_at = datetime.now()
+        expense.updated_at = datetime.now()
         expense_ref = db.collection("expenses").document()
         expense.id = expense_ref.id
         expense_ref.set(expense.model_dump())
@@ -45,6 +46,7 @@ async def update_expense(expense_id: str, expense: Expense, current_user: dict):
                                 detail="Permission Denied, You can only modify your expenses not others")
 
         expense.user_id = current_user["uid"]
+        expense.updated_at = datetime.now()
         expense_ref.update(expense.model_dump())
         return {"message": "Expense updated successfully"}
 
