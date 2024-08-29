@@ -55,3 +55,11 @@ async def login_user(user: UserLogin):
         return {"message": "Login successful", "token": response_data["idToken"]}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+async def delete_user():
+    pass
+
+
+async def update_user():
+    pass
