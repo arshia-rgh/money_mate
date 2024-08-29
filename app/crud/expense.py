@@ -17,3 +17,15 @@ async def add_expense(expense: Expense, current_user: dict):
         return {"message": "Expense added successfully", "id": expense.id}
     except Expense as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+async def delete_expense(expense: Expense, current_user: dict):
+    pass
+
+
+async def update_expense(expense: Expense, current_user: dict):
+    pass
+
+
+async def get_expense(expense: Expense, current_user: dict):
+    pass
