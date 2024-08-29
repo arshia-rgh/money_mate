@@ -1,13 +1,19 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+import firebase_config
+from firebase_admin import auth
+from schemas.user import UserLogin, UserCreate
 
 app = FastAPI()
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+@app.post("/signup")
+async def signup(user: UserCreate):
+    try:
+        user_record = auth.create_user(
+            email=user.email,
+            password=user.password,
+        )
 
-
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
+        return {"message": "User created successfully", "uid": user_record.uid}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
