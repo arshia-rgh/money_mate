@@ -1,24 +1,7 @@
-from fastapi import FastAPI, HTTPException
-import app.firebase_config
-from firebase_admin import auth
-from app.schemas.user import UserLogin, UserCreate
+from fastapi import FastAPI
+
+from app.routers import user
 
 app = FastAPI()
 
-
-@app.post("/signup")
-async def signup(user: UserCreate):
-    try:
-        user_record = auth.create_user(
-            email=user.email,
-            password=user.password,
-        )
-
-        return {"message": "User created successfully", "uid": user_record.uid}
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-
-@app.post("/login")
-async def login(user: UserLogin):
-    pass
+app.include_router(user.router, prefix="/user")
