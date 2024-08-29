@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 import requests
 from dotenv import load_dotenv
@@ -6,6 +7,7 @@ from fastapi import HTTPException
 from firebase_admin import auth
 
 from app.schemas.user import UserCreate, UserLogin
+from app.firebase_config import db
 
 load_dotenv()
 FIREBASE_API_KEY = os.getenv("FIREBASE_API_KEY")
@@ -17,6 +19,18 @@ async def create_user(user: UserCreate):
             email=user.email,
             password=user.password,
         )
+        # add full users data to the db
+        user_data = {
+            "uid": user_record.uid,
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "phone_number": user.phone_number,
+            "created_at": datetime.now(),
+            "updated_at": datetime.now(),
+        }
+        db.collection("users").document(user_record.uid).set(user_data)
+
         return {"message": "User created successfully", "uid": user_record.uid}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
