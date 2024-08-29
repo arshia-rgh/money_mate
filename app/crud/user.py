@@ -57,9 +57,29 @@ async def login_user(user: UserLogin):
         raise HTTPException(status_code=400, detail=str(e))
 
 
-async def delete_user():
-    pass
+async def delete_user(user_id: str, current_user: dict):
+    try:
+        user_ref = db.collection("users").document(user_id)
+        user = user_ref.get().to_dict()
+
+        if user["uid"] != current_user["uid"]:
+            raise HTTPException(status_code=403, detail="You can only delete your own account not others")
+
+        user_ref.delete()
+        return {"message": "Your user deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 
-async def update_user():
-    pass
+async def update_user(user_id: str, user: UserCreate, current_user: dict):
+    try:
+        user_ref = db.collection("users").document(user_id)
+        exists_user = user_ref.get().to_dict()
+
+        if exists_user["uid"] != current_user["uid"]:
+            raise HTTPException(status_code=403, detail="You can only edit your own account not others")
+
+        user_ref.update(user.model_dump())
+        return {"message": "Your account has been updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
