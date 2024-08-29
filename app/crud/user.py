@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 from fastapi import HTTPException
 from firebase_admin import auth
 
-from app.schemas.user import UserCreate, UserLogin
 from app.firebase_config import db
+from app.schemas.user import UserCreate, UserLogin
 
 load_dotenv()
 FIREBASE_API_KEY = os.getenv("FIREBASE_API_KEY")
