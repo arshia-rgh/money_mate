@@ -98,3 +98,16 @@ async def update_user(user_id: str, user: UserCreate, current_user: dict):
         return {"message": "Your account has been updated successfully"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+async def retrieve_user(user_id: str, current_user: dict):
+    try:
+        user_ref = db.collection("users").document(user_id)
+        user = user_ref.get().to_dict()
+
+        if user["uid"] != current_user["uid"]:
+            raise HTTPException(status_code=403, detail="You can only access your account not others")
+
+        return user
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
