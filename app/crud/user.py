@@ -65,8 +65,10 @@ async def delete_user(user_id: str, current_user: dict):
         if user["uid"] != current_user["uid"]:
             raise HTTPException(status_code=403, detail="You can only delete your own account not others")
 
+        # Delete user from Firebase Authentication
         auth.delete_user(user_id)
 
+        # Delete user document from Firestore
         user_ref.delete()
         return {"message": "Your user deleted successfully"}
     except Exception as e:
@@ -81,6 +83,7 @@ async def update_user(user_id: str, user: UserCreate, current_user: dict):
         if exists_user["uid"] != current_user["uid"]:
             raise HTTPException(status_code=403, detail="You can only edit your own account not others")
 
+        # Update user in Firebase Authentication
         auth.update_user(
             user_id,
             email=user.email,
@@ -89,6 +92,7 @@ async def update_user(user_id: str, user: UserCreate, current_user: dict):
             phone_number=user.phone_number,
         )
 
+        # Update user document in Firestore
         user.updated_at = datetime.now()
         user_ref.update(user.model_dump())
         return {"message": "Your account has been updated successfully"}
