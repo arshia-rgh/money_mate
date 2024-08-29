@@ -9,4 +9,6 @@ class Expense(BaseModel):
     category: str = Field(...)
     amount: float = Field(...)
     description: Optional[str] = Field(None)
-    date: Optional[datetime] = Field(None)
+    date: datetime = Field(...)
+    created_at : Optional[datetime] = Field(None)
+    updated_at: Optional[datetime] = Field(None)
