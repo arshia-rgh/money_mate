@@ -1,9 +1,7 @@
 from fastapi import HTTPException
-from google.cloud import firestore
 
+from app.firebase_config import db
 from app.schemas.expense import Expense
-
-db = firestore.Client()
 
 
 async def add_expense(expense: Expense, current_user: dict):
