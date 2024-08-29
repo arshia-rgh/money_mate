@@ -65,6 +65,8 @@ async def delete_user(user_id: str, current_user: dict):
         if user["uid"] != current_user["uid"]:
             raise HTTPException(status_code=403, detail="You can only delete your own account not others")
 
+        auth.delete_user(user_id)
+
         user_ref.delete()
         return {"message": "Your user deleted successfully"}
     except Exception as e:
@@ -78,6 +80,14 @@ async def update_user(user_id: str, user: UserCreate, current_user: dict):
 
         if exists_user["uid"] != current_user["uid"]:
             raise HTTPException(status_code=403, detail="You can only edit your own account not others")
+
+        auth.update_user(
+            user_id,
+            email=user.email,
+            password=user.password,
+            display_name=f"{user.first_name} {user.last_name}",
+            phone_number=user.phone_number,
+        )
 
         user.updated_at = datetime.now()
         user_ref.update(user.model_dump())
