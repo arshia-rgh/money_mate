@@ -73,3 +73,17 @@ async def retrieve_goal(goal_id: str, current_user: dict):
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+async def list_goal(current_user: dict):
+    try:
+        goals_ref = firestore_db.collection("goals").where("user_id", "==", current_user["uid"])
+
+        goals = goals_ref.stream()
+
+        goals_list = [goal.to_dict() for goal in goals]
+
+        return goals_list
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
