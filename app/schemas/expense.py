@@ -6,7 +6,7 @@ from datetime import datetime
 class Expense(BaseModel):
     id: Optional[str] = Field(None)
     user_id: Optional[str] = Field(None)
-    category: str = Field(...)
+    category: str = Field(..., min_length=1)
     amount: float = Field(...)
     description: Optional[str] = Field(None)
     date: datetime = Field(...)
