@@ -55,7 +55,7 @@ async def update_expense(expense_id: str, expense: Expense, current_user: dict):
         raise HTTPException(status_code=400, detail=str(e))
 
 
-async def get_expense(expense_id: str, current_user: dict):
+async def retrieve_expense(expense_id: str, current_user: dict):
     try:
         expense_ref = firestore_db.collection("expenses").document(expense_id)
         expense = expense_ref.get().to_dict()
