@@ -12,17 +12,17 @@ async def add_expense_entry(expense: Expense, current_user: dict = Depends(get_c
     return await add_expense(expense, current_user)
 
 
-@router.delete("/delete")
+@router.delete("/delete/{expense_id}")
 async def delete_expense_entry(expense_id: str, current_user: dict = Depends(get_current_user)):
     return await delete_expense(expense_id, current_user)
 
 
-@router.patch("/update")
+@router.patch("/update/{expense_id}")
 async def update_expense_entry(expense_id: str, expense: Expense, current_user: dict = Depends(get_current_user)):
     return await update_expense(expense_id, expense, current_user)
 
 
-@router.get("/retrieve")
+@router.get("/retrieve/{expense_id}")
 async def retrieve_expense_entry(expense_id: str, current_user: dict = Depends(get_current_user)):
     return await retrieve_expense(expense_id, current_user)
 
