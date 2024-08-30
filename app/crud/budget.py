@@ -51,3 +51,6 @@ async def update_budget(budget_id: str, budget: Budget, current_user: dict):
         budget.updated_at = datetime.now()
         budget_ref.update(budget.model_dump())
         return {"message": "The budget has been successfully updated"}
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
