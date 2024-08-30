@@ -93,6 +93,7 @@ async def update_user(user_id: str, user: UserCreate, current_user: dict):
         )
 
         # Update user document in Firestore
+        user.created_at = exists_user["created_at"]
         user.updated_at = datetime.now()
         user_ref.update(user.model_dump())
         return {"message": "Your account has been updated successfully"}

@@ -45,6 +45,7 @@ async def update_expense(expense_id: str, expense: Expense, current_user: dict):
             raise HTTPException(status_code=403,
                                 detail="Permission Denied, You can only modify your expenses not others")
 
+        expense.created_at = exists_expense["created_at"]
         expense.user_id = current_user["uid"]
         expense.updated_at = datetime.now()
         expense_ref.update(expense.model_dump())

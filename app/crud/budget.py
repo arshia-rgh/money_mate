@@ -46,6 +46,8 @@ async def update_budget(budget_id: str, budget: Budget, current_user: dict):
         if exists_budget["user_id"] != current_user["uid"]:
             raise HTTPException(status_code=403, detail="You can only modify your own budget")
 
+        budget.created_at = exists_budget["created_at"]  # if the user tried to change the created at
+        budget.user_id = current_user["uid"]
         budget.updated_at = datetime.now()
         budget_ref.update(budget.model_dump())
         return {"message": "The budget has been successfully updated"}
