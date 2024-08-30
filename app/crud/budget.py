@@ -66,3 +66,15 @@ async def retrieve_budget(budget_id: str, current_user: dict):
         return budget
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+async def list_budget(current_user: dict):
+    try:
+        budgets_ref = firestore_db.collection("budgets").where("user_id", "==", current_user["uid"])
+        budgets = budgets_ref.stream()
+        budget_list = [budget.to_dict() for budget in budgets]
+
+        return budget_list
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
