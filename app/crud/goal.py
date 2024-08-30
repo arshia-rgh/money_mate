@@ -59,3 +59,17 @@ async def update_goal(goal_id: str, goal: Goal, current_user: dict):
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+async def retrieve_goal(goal_id: str, current_user: dict):
+    try:
+        goal_ref = firestore_db.collection("goals").document(goal_id)
+
+        goal = goal_ref.get().to_dict()
+
+        if goal["user_id"] != current_user["uid"]:
+            raise HTTPException(status_code=403, detail="You can only access your own goal")
+        return goal
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
