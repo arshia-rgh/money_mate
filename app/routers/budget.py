@@ -25,3 +25,8 @@ async def update_budget_entry(budget_id: str, budget: Budget, current_user: dict
 @router.get("/retrieve/{budget_id}")
 async def retrieve_budget_entry(budget_id: str, current_user: dict = Depends(get_current_user)):
     return await retrieve_budget(budget_id, current_user)
+
+
+@router.get("/list")
+async def list_budget_entry(current_user: dict = Depends(get_current_user)):
+    return await list_budget(current_user)
