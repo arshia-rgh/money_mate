@@ -5,8 +5,8 @@ from pydantic import BaseModel, Field
 
 
 class Goal(BaseModel):
-    id: Optional[int] = Field(None)
-    user_id: Optional[int] = Field(None)
+    id: Optional[str] = Field(None)
+    user_id: Optional[str] = Field(None)
     name: str = Field(..., min_length=1)
     target_amount: float = Field(..., max_digits=10, decimal_places=2)
     current_amount: float = Field(..., max_digits=10, decimal_places=2)

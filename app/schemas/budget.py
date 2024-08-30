@@ -5,8 +5,8 @@ from pydantic import BaseModel, Field
 
 
 class Budget(BaseModel):
-    id: Optional[int] = Field(None)
-    user_id: Optional[int] = Field(None)
+    id: Optional[str] = Field(None)
+    user_id: Optional[str] = Field(None)
     category: str = Field(..., min_length=1)
     amount: float = Field(..., max_digits=10, decimal_places=2)
     start_date: datetime = Field(None)

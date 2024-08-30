@@ -5,8 +5,8 @@ from pydantic import BaseModel, Field
 
 
 class Transaction(BaseModel):
-    id: Optional[int] = Field(None)
-    user_id: Optional[int] = Field(None)
+    id: Optional[str] = Field(None)
+    user_id: Optional[str] = Field(None)
     type: str = Field(..., min_length=1)  # 'income' or 'expense'
     amount: float = Field(..., max_digits=10, decimal_places=2)
     category: str = Field(..., min_length=1)
