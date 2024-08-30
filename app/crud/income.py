@@ -21,3 +21,20 @@ async def add_income(income: Income, current_user: dict):
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+async def delete_income(income_id: str, current_user: dict):
+    try:
+        income_ref = firestore_db.collection("incomes").document(income_id)
+
+        income = income_ref.get().to_dict()
+
+        if income["user_id"] != current_user["uid"]:
+            raise HTTPException(status_code=403, detail="You can only delete your own income")
+
+        income_ref.delete()
+
+        return {"message": "Income deleted successfully"}
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
