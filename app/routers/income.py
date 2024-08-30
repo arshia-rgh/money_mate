@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 
-from app.crud.income import add_income, delete_income, update_income, retrieve_income
+from app.crud.income import add_income, delete_income, update_income, retrieve_income, list_income
 from app.dependencies import get_current_user
 from app.schemas.income import Income
 
@@ -25,3 +25,8 @@ async def update_income_entry(income_id: str, income: Income, current_user: dict
 @router.get("/retrieve/{income_id}")
 async def retrieve_income_entry(income_id: str, current_user: dict = Depends(get_current_user)):
     return await retrieve_income(income_id, current_user)
+
+
+@router.get("/list")
+async def list_incomes_entry(current_user: dict = Depends(get_current_user)):
+    return await list_income(current_user)
