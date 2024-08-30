@@ -74,3 +74,17 @@ async def retrieve_income(income_id: str, current_user: dict):
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+async def list_income(current_user: dict):
+    try:
+        incomes_ref = firestore_db.collection("incomes").where("user_id", "==", current_user["uid"])
+
+        incomes = incomes_ref.stream()
+
+        incomes_list = [income.to_dict() for income in incomes]
+
+        return incomes_list
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
