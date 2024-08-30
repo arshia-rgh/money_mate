@@ -54,3 +54,15 @@ async def update_budget(budget_id: str, budget: Budget, current_user: dict):
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+async def retrieve_budget(budget_id: str, current_user: dict):
+    try:
+        budget_ref = firestore_db.collection("budgets").document(budget_id)
+        budget = budget_ref.get().to_dict()
+
+        if budget["user_id"] != current_user["uid"]:
+            raise HTTPException(status_code=403, detail="You can only access your own budget")
+        return budget
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
