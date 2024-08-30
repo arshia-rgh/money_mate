@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from fastapi import HTTPException
 from firebase_admin import auth
 
-from app.firebase_config import db
+from app.firebase_config import firestore_db
 from app.schemas.user import UserCreate, UserLogin
 
 load_dotenv()
@@ -19,7 +19,7 @@ async def create_user(user: UserCreate):
             email=user.email,
             password=user.password,
         )
-        # add full users data to the db
+        # add full users data to the firestore_db
         user_data = {
             "uid": user_record.uid,
             "email": user.email,
@@ -29,7 +29,7 @@ async def create_user(user: UserCreate):
             "created_at": datetime.now(),
             "updated_at": datetime.now(),
         }
-        db.collection("users").document(user_record.uid).set(user_data)
+        firestore_db.collection("users").document(user_record.uid).set(user_data)
 
         return {"message": "User created successfully", "uid": user_record.uid}
     except Exception as e:
@@ -59,7 +59,7 @@ async def login_user(user: UserLogin):
 
 async def delete_user(user_id: str, current_user: dict):
     try:
-        user_ref = db.collection("users").document(user_id)
+        user_ref = firestore_db.collection("users").document(user_id)
         user = user_ref.get().to_dict()
 
         if user["uid"] != current_user["uid"]:
@@ -77,7 +77,7 @@ async def delete_user(user_id: str, current_user: dict):
 
 async def update_user(user_id: str, user: UserCreate, current_user: dict):
     try:
-        user_ref = db.collection("users").document(user_id)
+        user_ref = firestore_db.collection("users").document(user_id)
         exists_user = user_ref.get().to_dict()
 
         if exists_user["uid"] != current_user["uid"]:
@@ -102,7 +102,7 @@ async def update_user(user_id: str, user: UserCreate, current_user: dict):
 
 async def retrieve_user(user_id: str, current_user: dict):
     try:
-        user_ref = db.collection("users").document(user_id)
+        user_ref = firestore_db.collection("users").document(user_id)
         user = user_ref.get().to_dict()
 
         if user["uid"] != current_user["uid"]:

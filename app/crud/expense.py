@@ -2,7 +2,7 @@ from datetime import datetime
 
 from fastapi import HTTPException
 
-from app.firebase_config import db
+from app.firebase_config import firestore_db
 from app.schemas.expense import Expense
 
 
@@ -11,7 +11,7 @@ async def add_expense(expense: Expense, current_user: dict):
         expense.user_id = current_user["uid"]
         expense.created_at = datetime.now()
         expense.updated_at = datetime.now()
-        expense_ref = db.collection("expenses").document()
+        expense_ref = firestore_db.collection("expenses").document()
         expense.id = expense_ref.id
         expense_ref.set(expense.model_dump())
 
@@ -23,7 +23,7 @@ async def add_expense(expense: Expense, current_user: dict):
 
 async def delete_expense(expense_id: str, current_user: dict):
     try:
-        expense_ref = db.collection("expenses").document(expense_id)
+        expense_ref = firestore_db.collection("expenses").document(expense_id)
         expense = expense_ref.get().to_dict()
 
         if expense["user_id"] != current_user["uid"]:
@@ -39,7 +39,7 @@ async def delete_expense(expense_id: str, current_user: dict):
 
 async def update_expense(expense_id: str, expense: Expense, current_user: dict):
     try:
-        expense_ref = db.collection("expenses").document(expense_id)
+        expense_ref = firestore_db.collection("expenses").document(expense_id)
         exists_expense = expense_ref.get().to_dict()
         if exists_expense["user_id"] != current_user["uid"]:
             raise HTTPException(status_code=403,
@@ -56,7 +56,7 @@ async def update_expense(expense_id: str, expense: Expense, current_user: dict):
 
 async def get_expense(expense_id: str, current_user: dict):
     try:
-        expense_ref = db.collection("expenses").document(expense_id)
+        expense_ref = firestore_db.collection("expenses").document(expense_id)
         expense = expense_ref.get().to_dict()
 
         if expense["user_id"] != current_user["uid"]:
