@@ -60,3 +60,17 @@ async def update_income(income_id: str, income: Income, current_user: dict):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+
+async def retrieve_income(income_id: str, current_user: dict):
+    try:
+        income_ref = firestore_db.collection("incomes").document(income_id)
+
+        income = income_ref.get().to_dict()
+
+        if income["user_id"] != current_user["uid"]:
+            raise HTTPException(status_code=403, detail="You can only access your own income")
+
+        return income
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
