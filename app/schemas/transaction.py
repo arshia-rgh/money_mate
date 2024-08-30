@@ -8,7 +8,7 @@ class Transaction(BaseModel):
     id: Optional[str] = Field(None)
     user_id: Optional[str] = Field(None)
     type: str = Field(..., min_length=1)  # 'income' or 'expense'
-    amount: float = Field(..., max_digits=10, decimal_places=2)
+    amount: float = Field(...)
     category: str = Field(..., min_length=1)
     description: Optional[str] = Field(None)
     date: datetime = Field(...)
