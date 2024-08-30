@@ -38,3 +38,24 @@ async def delete_goal(goal_id: str, current_user: dict):
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+async def update_goal(goal_id: str, goal: Goal, current_user: dict):
+    try:
+        goal_ref = firestore_db.collection("goals").document(goal_id)
+
+        exists_goal = goal_ref.get().to_dict()
+
+        if exists_goal["user_id"] != current_user["uid"]:
+            raise HTTPException(status_code=403, detail="You can only modify your own goal")
+
+        goal.user_id = current_user["uid"]
+        goal.created_at = exists_goal["created_at"]
+        goal.updated_at = datetime.now()
+
+        goal_ref.update(goal.model_dump())
+
+        return {"message": "The goal updated successfully"}
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
