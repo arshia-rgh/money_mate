@@ -24,7 +24,7 @@ async def add_budget(budget: Budget, current_user: dict):
 
 async def delete_budget(budget_id: str, current_user: dict):
     try:
-        budget_ref = firestore_db.collection("budgets").document(firestore_db)
+        budget_ref = firestore_db.collection("budgets").document(budget_id)
         budget = budget_ref.get().to_dict()
 
         if budget["user_id"] != current_user["uid"]:
@@ -35,3 +35,17 @@ async def delete_budget(budget_id: str, current_user: dict):
         return {"message": "The budget has been successfully deleted"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+async def update_budget(budget_id: str, budget: Budget, current_user: dict):
+    try:
+        budget_ref = firestore_db.collection("budgets").document(budget_id)
+
+        exists_budget = budget_ref.get().to_dict()
+
+        if exists_budget["user_id"] != current_user["uid"]:
+            raise HTTPException(status_code=403, detail="You can only modify your own budget")
+
+        budget.updated_at = datetime.now()
+        budget_ref.update(budget.model_dump())
+        return {"message": "The budget has been successfully updated"}
