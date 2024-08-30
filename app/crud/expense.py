@@ -45,6 +45,7 @@ async def update_expense(expense_id: str, expense: Expense, current_user: dict):
             raise HTTPException(status_code=403,
                                 detail="Permission Denied, You can only modify your expenses not others")
 
+        expense.created_at = exists_expense["created_at"]
         expense.user_id = current_user["uid"]
         expense.updated_at = datetime.now()
         expense_ref.update(expense.model_dump())
@@ -54,7 +55,7 @@ async def update_expense(expense_id: str, expense: Expense, current_user: dict):
         raise HTTPException(status_code=400, detail=str(e))
 
 
-async def get_expense(expense_id: str, current_user: dict):
+async def retrieve_expense(expense_id: str, current_user: dict):
     try:
         expense_ref = firestore_db.collection("expenses").document(expense_id)
         expense = expense_ref.get().to_dict()
@@ -64,5 +65,18 @@ async def get_expense(expense_id: str, current_user: dict):
                                 detail="Permission Denied, You can only access your expenses not others")
 
         return expense
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+async def list_expense(current_user: dict):
+    try:
+        expenses_ref = firestore_db.collection("expenses").where("user_id", "==", current_user["uid"])
+        expenses = expenses_ref.stream()
+
+        expenses_list = [expense.to_dict() for expense in expenses]
+
+        return expenses_list
+
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
