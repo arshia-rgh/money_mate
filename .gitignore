@@ -1,5 +1,5 @@
 .venv/
 __pycache__/
 .idea/
-app/fir-test-f61db-firebase-adminsdk-yyuk7-d8ae5261bb.json
+app/fire_base_conf.json
 .env
