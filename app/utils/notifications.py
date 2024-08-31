@@ -9,7 +9,7 @@ from app.schemas.notification import Notification
 from app.utils.send_mail import send_mail_async
 
 
-class NotificationCRUD:
+class NotificationHandle:
     def __init__(self, user_id: str):
         self.user_id = user_id
         self.user_email = self.get_user_email()
