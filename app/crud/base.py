@@ -1,9 +1,10 @@
 from datetime import datetime
 from typing import TypeVar, Generic, Type
 
-from fastapi import HTTPException
+from fastapi import HTTPException, APIRouter, Depends
 from pydantic import BaseModel
 
+from app.dependencies import get_current_user
 from app.firebase_config import firestore_db
 
 T = TypeVar("T", bound=BaseModel)
@@ -13,8 +14,15 @@ class BaseCRUD(Generic[T]):
     def __init__(self, model: Type[T], collection_name: str):
         self.model = model
         self.collection_name = collection_name
+        # router
+        self.router = APIRouter()
+        self.router.post("/add")(self.add_item)
+        self.router.delete("/delete/{item_id}")(self.delete_item)
+        self.router.patch("/update/{item_id}")(self.update_item)
+        self.router.get("/retrieve/{item_id}")(self.retrieve_item)
+        self.router.get("/list")(self.list_items)
 
-    async def add_item(self, item: T, current_user: dict):
+    async def add_item(self, item: T, current_user: dict = Depends(get_current_user)):
         try:
             item_ref = firestore_db.collection(f"{self.collection_name}").document()
             item.user_id = current_user["uid"]
@@ -29,7 +37,7 @@ class BaseCRUD(Generic[T]):
         except Exception as e:
             raise HTTPException(status_code=400, detail=str(e))
 
-    async def delete_item(self, item_id: str, current_user: dict):
+    async def delete_item(self, item_id: str, current_user: dict = Depends(get_current_user)):
         try:
             item_ref = firestore_db.collection(f"{self.collection_name}").document(item_id)
 
@@ -47,7 +55,7 @@ class BaseCRUD(Generic[T]):
         except Exception as e:
             raise HTTPException(status_code=400, detail=str(e))
 
-    async def update_item(self, item_id: str, item: T, current_user: dict):
+    async def update_item(self, item_id: str, item: T, current_user: dict = Depends(get_current_user)):
         try:
             item_ref = firestore_db.collection(f"{self.collection_name}").document(item_id)
 
@@ -71,7 +79,7 @@ class BaseCRUD(Generic[T]):
         except Exception as e:
             raise HTTPException(status_code=400, detail=str(e))
 
-    async def retrieve_item(self, item_id: str, current_user: dict):
+    async def retrieve_item(self, item_id: str, current_user: dict = Depends(get_current_user)):
         try:
             item_ref = firestore_db.collection(f"{self.collection_name}").document(item_id)
 
@@ -89,7 +97,7 @@ class BaseCRUD(Generic[T]):
         except Exception as e:
             raise HTTPException(status_code=400, detail=str(e))
 
-    async def list_items(self, current_user: dict):
+    async def list_items(self, current_user: dict = Depends(get_current_user)):
         try:
             items_ref = firestore_db.collection(f"{self.collection_name}").where("user_id", "==", current_user["uid"])
 
