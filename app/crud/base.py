@@ -1,4 +1,4 @@
-from typing import TypeVar, Generic
+from typing import TypeVar, Generic, Type
 
 from pydantic import BaseModel
 
@@ -6,8 +6,9 @@ T = TypeVar("T", bound=BaseModel)
 
 
 class BaseCRUD(Generic[T]):
-    def __init__(self):
-        pass
+    def __init__(self, model: Type[T], collection_name: str):
+        self.model = model
+        self.collection_name = collection_name
 
     async def add_item(self):
         pass
