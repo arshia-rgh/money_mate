@@ -2,16 +2,25 @@ import asyncio
 from datetime import datetime
 
 from fastapi import BackgroundTasks
+from firebase_admin import auth
 
-from app.firebase_config import realtime_db
+from app.firebase_config import realtime_db,
 from app.schemas.notification import Notification
 from app.utils.send_mail import send_mail_async
 
 
 class NotificationCRUD:
-    def __init__(self, user_id: str, user_email: str):
+    def __init__(self, user_id: str):
         self.user_id = user_id
-        self.user_email = user_email
+        self.user_email = self.get_user_email()
+
+    def get_user_email(self):
+        try:
+            user = auth.get_user(self.user_id)
+            return user.email
+
+        except auth.UserNotFoundError:
+            pass
 
     async def new_notification(self, notification: Notification):
         notification_data = notification.model_dump()
