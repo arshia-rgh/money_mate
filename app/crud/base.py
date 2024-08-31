@@ -6,6 +6,8 @@ from pydantic import BaseModel
 
 from app.dependencies import get_current_user
 from app.firebase_config import firestore_db
+from app.schemas.notification import Notification
+from app.utils.notifications import NotificationHandle
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -16,11 +18,11 @@ class BaseCRUD(Generic[T]):
         self.collection_name = collection_name
         # router
         self.router = APIRouter()
-        self.router.post("/add")(self.add_item)
-        self.router.delete("/delete/{item_id}")(self.delete_item)
-        self.router.patch("/update/{item_id}")(self.update_item)
-        self.router.get("/retrieve/{item_id}")(self.retrieve_item)
-        self.router.get("/list")(self.list_items)
+        self.router.post("/add/")(self.add_item)
+        self.router.delete("/delete/{item_id}/")(self.delete_item)
+        self.router.patch("/update/{item_id}/")(self.update_item)
+        self.router.get("/retrieve/{item_id}/")(self.retrieve_item)
+        self.router.get("/list/")(self.list_items)
 
     async def add_item(self, item: T, current_user: dict = Depends(get_current_user)):
         try:
@@ -32,6 +34,11 @@ class BaseCRUD(Generic[T]):
 
             item_ref.set(item.model_dump())
 
+            notif_handle = NotificationHandle(current_user["uid"])
+            notification = Notification(title=f"{self.collection_name.capitalize()}",
+                                        message=f"{item.id} has been added successfully")
+
+            await notif_handle.new_notification(notification)
             return {"message": f"{self.collection_name.capitalize()} has been successfully added", "id": item.id}
 
         except Exception as e:
@@ -50,6 +57,11 @@ class BaseCRUD(Generic[T]):
                 raise HTTPException(status_code=403, detail=f"You can only delete your own {self.collection_name}")
 
             item_ref.delete()
+            notif_handle = NotificationHandle(current_user["uid"])
+            notification = Notification(title=f"{self.collection_name.capitalize()}",
+                                        message=f"{item.id} has been deleted successfully")
+
+            await notif_handle.new_notification(notification)
             return {"message": f"{self.collection_name.capitalize()} has been successfully deleted"}
 
         except Exception as e:
@@ -73,6 +85,11 @@ class BaseCRUD(Generic[T]):
             item.id = item_ref.id
 
             item_ref.update(item.model_dump())
+            notif_handle = NotificationHandle(current_user["uid"])
+            notification = Notification(title=f"{self.collection_name.capitalize()}",
+                                        message=f"{item.id} has been updated successfully")
+
+            await notif_handle.new_notification(notification)
 
             return {"message": f"{self.collection_name.capitalize()} has been successfully updated"}
 
