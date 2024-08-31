@@ -1,4 +1,4 @@
-from app.schemas import budget, expense, goal, income, investment
+from app.schemas import budget, expense, goal, income, investment, transaction
 
 from .base import BaseCRUD
 
@@ -26,3 +26,8 @@ class IncomeCRUD(BaseCRUD[income.Income]):
 class InvestmentCRUD(BaseCRUD[investment.Investment]):
     def __init__(self):
         super().__init__(investment.Investment, "investments")
+
+
+class TransactionCRUD(BaseCRUD[transaction.Transaction]):
+    def __init__(self):
+        super().__init__(transaction.Transaction, "transactions")
