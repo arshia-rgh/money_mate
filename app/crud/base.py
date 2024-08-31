@@ -89,5 +89,18 @@ class BaseCRUD(Generic[T]):
         except Exception as e:
             raise HTTPException(status_code=400, detail=str(e))
 
-    async def list_items(self):
-        pass
+    async def list_items(self, current_user: dict):
+        try:
+            items_ref = firestore_db.collection(f"{self.collection_name}").where("user_id", "==", current_user["uid"])
+
+            items = items_ref.stream()
+
+            if not items:
+                raise HTTPException(status_code=404, detail=f"{self.collection_name} not exists")
+
+            items_list = [item.to_dict() for item in items]
+
+            return items_list
+
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=str(e))
