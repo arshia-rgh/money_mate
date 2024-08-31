@@ -1,6 +1,8 @@
 import asyncio
 from datetime import datetime
 
+from fastapi import BackgroundTasks
+
 from app.firebase_config import realtime_db
 from app.schemas.notification import Notification
 from app.utils.send_mail import send_mail_async
@@ -42,3 +44,6 @@ class NotificationCRUD:
                 asyncio.create_task(self.new_notification(notification))
 
         realtime_db.child("notifications").order_by_child("user_id").equal_to(self.user_id).listen(listener)
+
+    def start_listening(self, background_tasks: BackgroundTasks):
+        background_tasks.add_task(self.listen_notifications)
