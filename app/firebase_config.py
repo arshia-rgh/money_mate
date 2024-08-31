@@ -9,3 +9,4 @@ cred = credentials.Certificate("app/fire_base_conf.json")
 firebase_admin.initialize_app(cred, {"databaseURL": os.getenv("databaseURL")})
 
 firestore_db = firestore.client()
+realtime_db = db.reference()
