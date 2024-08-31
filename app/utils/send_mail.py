@@ -18,7 +18,7 @@ conf = ConnectionConfig(
 )
 
 
-async def send_mail_async(subject: str, email_to: str, body: dict):
+async def send_mail_async(subject: str, email_to: str, body: str):
     message = MessageSchema(
         subject=subject,
         recipients=[email_to, ],
