@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime
 
 from app.firebase_config import realtime_db
@@ -35,4 +36,9 @@ class NotificationCRUD:
         return notifications
 
     async def listen_notifications(self):
-        pass
+        def listener(event):
+            if event.data:
+                notification = Notification(**event.data)
+                asyncio.create_task(self.new_notification(notification))
+
+        realtime_db.child("notifications").order_by_child("user_id").equal_to(self.user_id).listen(listener)
