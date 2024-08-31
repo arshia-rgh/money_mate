@@ -23,3 +23,16 @@ class NotificationCRUD:
         email_to = self.user_email
 
         await send_mail_async(subject, email_to, body)
+
+    async def get_notifications(self):
+        notifications = []
+        notifications_ref = realtime_db.child("notifications").order_by_child("user_id").equal_to(self.user_id).get()
+
+        if notifications_ref:
+            for k, v in notifications_ref.items():
+                notifications.append(v)
+
+        return notifications
+
+    async def listen_notifications(self):
+        pass
