@@ -29,8 +29,23 @@ class BaseCRUD(Generic[T]):
         except Exception as e:
             raise HTTPException(status_code=400, detail=str(e))
 
-    async def delete_item(self):
-        pass
+    async def delete_item(self, item_id: str, current_user: dict):
+        try:
+            item_ref = firestore_db.collection(f"{self.collection_name}").document(item_id)
+
+            item = item_ref.get().to_dict()
+
+            if not item:
+                raise HTTPException(status_code=404, detail=f"{self.collection_name.capitalize()} not exists")
+
+            if item["user_id"] != current_user["uid"]:
+                raise HTTPException(status_code=403, detail=f"You can only delete your own {self.collection_name}")
+
+            item_ref.delete()
+            return {"message": f"{self.collection_name.capitalize()} has been successfully deleted"}
+
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=str(e))
 
     async def update_item(self):
         pass
