@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from fastapi_mail import ConnectionConfig
+from fastapi_mail import ConnectionConfig, FastMail, MessageSchema
 
 load_dotenv()
 
@@ -16,3 +16,14 @@ conf = ConnectionConfig(
     MAIL_SSL=False,
     USE_CREDENTIALS=True,
 )
+
+
+async def send_mail_async(subject: str, email_to: str, body: dict):
+    message = MessageSchema(
+        subject=subject,
+        recipients=[email_to, ],
+        body=body,
+    )
+
+    fm = FastMail(conf)
+    await fm.send_message(message)
