@@ -4,7 +4,7 @@ from datetime import datetime
 from fastapi import BackgroundTasks
 from firebase_admin import auth
 
-from app.firebase_config import realtime_db,
+from app.firebase_config import realtime_db
 from app.schemas.notification import Notification
 from app.utils.send_mail import send_mail_async
 
