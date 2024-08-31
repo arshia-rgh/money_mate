@@ -16,11 +16,11 @@ class BaseCRUD(Generic[T]):
         self.collection_name = collection_name
         # router
         self.router = APIRouter()
-        self.router.post("/add")(self.add_item)
-        self.router.delete("/delete/{item_id}")(self.delete_item)
-        self.router.patch("/update/{item_id}")(self.update_item)
-        self.router.get("/retrieve/{item_id}")(self.retrieve_item)
-        self.router.get("/list")(self.list_items)
+        self.router.post("/add/")(self.add_item)
+        self.router.delete("/delete/{item_id}/")(self.delete_item)
+        self.router.patch("/update/{item_id}/")(self.update_item)
+        self.router.get("/retrieve/{item_id}/")(self.retrieve_item)
+        self.router.get("/list/")(self.list_items)
 
     async def add_item(self, item: T, current_user: dict = Depends(get_current_user)):
         try:

@@ -12,21 +12,21 @@ async def signup(user: UserCreate):
     return await create_user(user)
 
 
-@router.post("/login")
+@router.post("/login/")
 async def login(user: UserLogin):
     return await login_user(user)
 
 
-@router.delete("/delete/{user_id}")
+@router.delete("/delete/{user_id}/")
 async def delete_account(user_id: str, current_user: dict = Depends(get_current_user)):
     return await delete_user(user_id, current_user)
 
 
-@router.patch("/update/{user_id}")
+@router.patch("/update/{user_id}/")
 async def update_account(user_id: str, user: UserCreate, current_user: dict = Depends(get_current_user)):
     return await update_user(user_id, user, current_user)
 
 
-@router.get("/profile/{user_id}")
+@router.get("/profile/{user_id}/")
 async def retrieve_account(user_id: str, current_user: dict = Depends(get_current_user)):
     return await retrieve_account(user_id, current_user)
