@@ -10,7 +10,5 @@ class Investment(BaseModel):
     type: str = Field(..., min_length=1)
     amount: float = Field(...)
     date: datetime = Field(...)
-    created_at : Optional[datetime] = Field(None)
+    created_at: Optional[datetime] = Field(None)
     updated_at: Optional[datetime] = Field(None)
-
-
