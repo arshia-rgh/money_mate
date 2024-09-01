@@ -17,7 +17,7 @@ class BaseCRUD:
         # router
         self.router = APIRouter()
 
-        @self.router.post("/add/", response_model=self.model)
+        @self.router.post("/add/")
         async def add_item(item: self.model, current_user: dict = Depends(get_current_user)):
             try:
                 item_ref = firestore_db.collection(f"{self.collection_name}").document()
@@ -38,7 +38,7 @@ class BaseCRUD:
             except Exception as e:
                 raise HTTPException(status_code=400, detail=str(e))
 
-        @self.router.delete("/delete/{item_id}/", response_model=self.model)
+        @self.router.delete("/delete/{item_id}/")
         async def delete_item(item_id: str, current_user: dict = Depends(get_current_user)):
             try:
                 item_ref = firestore_db.collection(f"{self.collection_name}").document(item_id)
@@ -62,7 +62,7 @@ class BaseCRUD:
             except Exception as e:
                 raise HTTPException(status_code=400, detail=str(e))
 
-        @self.router.patch("/update/{item_id}/", response_model=self.model)
+        @self.router.patch("/update/{item_id}/")
         async def update_item(item_id: str, item: self.model,
                               current_user: dict = Depends(get_current_user)):
             try:
@@ -93,7 +93,7 @@ class BaseCRUD:
             except Exception as e:
                 raise HTTPException(status_code=400, detail=str(e))
 
-        @self.router.get("/retrieve/{item_id}/", response_model=self.model)
+        @self.router.get("/retrieve/{item_id}/")
         async def retrieve_item(item_id: str, current_user: dict = Depends(get_current_user)):
             try:
                 item_ref = firestore_db.collection(f"{self.collection_name}").document(item_id)
@@ -112,7 +112,7 @@ class BaseCRUD:
             except Exception as e:
                 raise HTTPException(status_code=400, detail=str(e))
 
-        @self.router.get("/list/", response_model=self.model)
+        @self.router.get("/list/")
         async def list_items(current_user: dict = Depends(get_current_user)):
             try:
                 items_ref = firestore_db.collection(f"{self.collection_name}").where("user_id", "==",
