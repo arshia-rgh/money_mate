@@ -18,7 +18,7 @@ class BaseCRUD:
         self.router = APIRouter()
 
         @self.router.post("/add/", response_model=self.model)
-        async def add_item(item: Type[BaseModel], current_user: dict = Depends(get_current_user)):
+        async def add_item(item: self.model, current_user: dict = Depends(get_current_user)):
             try:
                 item_ref = firestore_db.collection(f"{self.collection_name}").document()
                 item.user_id = current_user["uid"]
@@ -63,7 +63,7 @@ class BaseCRUD:
                 raise HTTPException(status_code=400, detail=str(e))
 
         @self.router.patch("/update/{item_id}/", response_model=self.model)
-        async def update_item(item_id: str, item: Type[BaseModel],
+        async def update_item(item_id: str, item: self.model,
                               current_user: dict = Depends(get_current_user)):
             try:
                 item_ref = firestore_db.collection(f"{self.collection_name}").document(item_id)
