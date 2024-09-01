@@ -2,32 +2,9 @@ from app.schemas import budget, expense, goal, income, investment, transaction
 
 from .base import BaseCRUD
 
-
-class ExpenseCRUD(BaseCRUD):
-    def __init__(self):
-        super().__init__(expense.Expense, "expenses")
-
-
-class BudgetCRUD(BaseCRUD):
-    def __init__(self):
-        super().__init__(budget.Budget, "budgets")
-
-
-class GoalCRUD(BaseCRUD):
-    def __init__(self):
-        super().__init__(goal.Goal, "goals")
-
-
-class IncomeCRUD(BaseCRUD):
-    def __init__(self):
-        super().__init__(income.Income, "incomes")
-
-
-class InvestmentCRUD(BaseCRUD):
-    def __init__(self):
-        super().__init__(investment.Investment, "investments")
-
-
-class TransactionCRUD(BaseCRUD):
-    def __init__(self):
-        super().__init__(transaction.Transaction, "transactions")
+expense_crud = BaseCRUD(expense.Expense, "expenses")
+budget_crud = BaseCRUD(budget.Budget, "budgets")
+goal_crud = BaseCRUD(goal.Goal, "goals")
+income_crud = BaseCRUD(income.Income, "incomes")
+invest_crud = BaseCRUD(investment.Investment, "investments")
+transaction_crud = BaseCRUD(transaction.Transaction, "transactions")
