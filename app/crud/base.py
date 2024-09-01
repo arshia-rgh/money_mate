@@ -22,7 +22,7 @@ class BaseCRUD:
         self.router.get("/retrieve/{item_id}/", response_model=self.model)(self.retrieve_item)
         self.router.get("/list/", response_model=self.model)(self.list_items)
 
-    async def add_item(self, item: BaseModel, current_user: dict = Depends(get_current_user)):
+    async def add_item(self, item: Type[BaseModel], current_user: dict = Depends(get_current_user)):
         try:
             item_ref = firestore_db.collection(f"{self.collection_name}").document()
             item.user_id = current_user["uid"]
@@ -65,7 +65,7 @@ class BaseCRUD:
         except Exception as e:
             raise HTTPException(status_code=400, detail=str(e))
 
-    async def update_item(self, item_id: str, item: BaseModel, current_user: dict = Depends(get_current_user)):
+    async def update_item(self, item_id: str, item: Type[BaseModel], current_user: dict = Depends(get_current_user)):
         try:
             item_ref = firestore_db.collection(f"{self.collection_name}").document(item_id)
 
