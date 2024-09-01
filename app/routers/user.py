@@ -7,7 +7,7 @@ from app.schemas.user import UserCreate, UserLogin
 router = APIRouter()
 
 
-@router.post("/signup")
+@router.post("/signup/")
 async def signup(user: UserCreate):
     return await create_user(user)
 
