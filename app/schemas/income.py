@@ -1,7 +1,7 @@
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel, Field
-from typing import Optional
 
 
 class Income(BaseModel):
@@ -10,6 +10,5 @@ class Income(BaseModel):
     amount: float = Field(...)
     source: str = Field(..., min_length=1)
     date: datetime = Field(...)
-    created_at : Optional[datetime] = Field(None)
+    created_at: Optional[datetime] = Field(None)
     updated_at: Optional[datetime] = Field(None)
-

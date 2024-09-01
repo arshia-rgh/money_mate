@@ -1,6 +1,7 @@
-from pydantic import BaseModel, Field
-from typing import Optional
 from datetime import datetime
+from typing import Optional
+
+from pydantic import BaseModel, Field
 
 
 class Expense(BaseModel):
@@ -10,5 +11,5 @@ class Expense(BaseModel):
     amount: float = Field(...)
     description: Optional[str] = Field(None)
     date: datetime = Field(...)
-    created_at : Optional[datetime] = Field(None)
+    created_at: Optional[datetime] = Field(None)
     updated_at: Optional[datetime] = Field(None)

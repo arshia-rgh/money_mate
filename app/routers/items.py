@@ -1,13 +1,13 @@
-from app.crud.items import ExpenseCRUD, BudgetCRUD, GoalCRUD, IncomeCRUD, InvestmentCRUD, TransactionCRUD
+from app.crud.items import expense_crud, budget_crud, goal_crud, invest_crud, income_crud, transaction_crud
 
-expense_router = ExpenseCRUD().router
+expense_router = expense_crud.router
 
-budget_router = BudgetCRUD().router
+budget_router = budget_crud.router
 
-goal_router = GoalCRUD().router
+goal_router = goal_crud.router
 
-income_router = IncomeCRUD().router
+income_router = income_crud.router
 
-investment_router = InvestmentCRUD().router
+investment_router = invest_crud.router
 
-transaction_router = TransactionCRUD().router
+transaction_router = transaction_crud.router
