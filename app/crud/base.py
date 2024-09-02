@@ -8,6 +8,7 @@ from app.dependencies import get_current_user
 from app.firebase_config import firestore_db
 from app.schemas.notification import Notification
 from app.utils.notifications import NotificationHandle
+from app.utils.serializers import serialize_item
 
 
 class BaseCRUD:
@@ -26,7 +27,7 @@ class BaseCRUD:
                 item.created_at = datetime.now()
                 item.id = item_ref.id
 
-                item_ref.set(self.serialize_item(item))
+                item_ref.set(serialize_item(item))
 
                 notif_handle = NotificationHandle(current_user["uid"])
                 notification = Notification(title=f"{self.collection_name.capitalize()}",
@@ -81,7 +82,7 @@ class BaseCRUD:
                 item.updated_at = datetime.now()
                 item.id = item_ref.id
 
-                item_ref.update(self.serialize_item(item))
+                item_ref.update(serialize_item(item))
                 notif_handle = NotificationHandle(current_user["uid"])
                 notification = Notification(title=f"{self.collection_name.capitalize()}",
                                             message=f"{item.id} has been updated successfully")
@@ -107,7 +108,7 @@ class BaseCRUD:
                     raise HTTPException(status_code=403,
                                         detail=f"You can only access your own {self.collection_name.capitalize()}")
 
-                return self.serialize_item(item)
+                return serialize_item(item)
 
             except Exception as e:
                 raise HTTPException(status_code=400, detail=str(e))
@@ -123,21 +124,9 @@ class BaseCRUD:
                 if not items:
                     raise HTTPException(status_code=404, detail=f"{self.collection_name} not exists")
 
-                items_list = [self.serialize_item(item.to_dict()) for item in items]
+                items_list = [serialize_item(item.to_dict()) for item in items]
 
                 return items_list
 
             except Exception as e:
                 raise HTTPException(status_code=400, detail=str(e))
-
-    @staticmethod
-    def serialize_item(item):
-        if isinstance(item, BaseModel):
-            item_dict = item.model_dump()
-        else:
-            item_dict = item
-
-        for k, v in item_dict.items():
-            if isinstance(v, datetime):
-                item_dict[k] = v.isoformat()
-        return item_dict

@@ -7,6 +7,7 @@ from firebase_admin import auth
 from app.firebase_config import realtime_db
 from app.schemas.notification import Notification
 from app.utils.send_mail import send_mail_async
+from app.utils.serializers import serialize_item
 
 
 class NotificationHandle:
@@ -23,18 +24,17 @@ class NotificationHandle:
             pass
 
     async def new_notification(self, notification: Notification):
-        notification_data = notification.model_dump()
-        notification_data["created_at"] = datetime.now()
-        notification_data["updated_at"] = datetime.now()
-        notification_data["user_id"] = self.user_id
+        notification.created_at = datetime.now()
+        notification.updated_at = datetime.now()
+        notification.user_id = self.user_id
 
-        await realtime_db.child("notifications").push(notification_data)
+        realtime_db.child("notifications").push(serialize_item(notification))
 
-        subject = notification.title
-        body = notification.message
+        subject = str(notification.title)
+        body = str(notification.message)
         email_to = self.user_email
 
-        await send_mail_async(subject, email_to, body)
+        await send_mail_async(subject=subject, body=body, email_to=email_to)
 
     async def get_notifications(self):
         notifications = []
@@ -42,7 +42,7 @@ class NotificationHandle:
 
         if notifications_ref:
             for k, v in notifications_ref.items():
-                notifications.append(v)
+                notifications.append(serialize_item(v))
 
         return notifications
 
