@@ -3,8 +3,12 @@
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&logo=firebase&logoColor=white)
 
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat-square&logo=fastapi&logoColor=white)
+
 ## Description
-This project is an Expense Tracker API built with FastAPI. It allows users to manage their expenses, budgets, incomes user accounts using Firebase Authentication and Firestore.
+
+This project is an Expense Tracker API built with FastAPI. It allows users to manage their expenses, budgets, incomes
+user accounts using Firebase Authentication and Firestore.
+
 ## Installation
 
 1. Clone the repository:
@@ -26,9 +30,17 @@ This project is an Expense Tracker API built with FastAPI. It allows users to ma
 
 4. Set up environment variables:
     - Create a `.env` file in the root directory.
-    - Add your Firebase API key to the `.env` file:
-        ```
+    - Add your Firebase API key and other configurations to the `.env` file:
+        ```dotenv
         FIREBASE_API_KEY=your_firebase_api_key
+        databaseURL=https://your-database-url
+
+        MAIL_USERNAME=your_email
+        MAIL_PASSWORD=your_email_password
+        MAIL_FROM=your_email
+        MAIL_PORT=587
+        MAIL_SERVER=smtp.gmail.com
+        MAIL_FROM_NAME=New Notifications
         ```
 
 ## Usage
@@ -38,53 +50,9 @@ This project is an Expense Tracker API built with FastAPI. It allows users to ma
     uvicorn app.main:app --reload
     ```
 
+### Endpoints
+
 2. Access the API documentation at `http://127.0.0.1:8000/docs`.
-
-## API Endpoints
-
-### User Endpoints
-
-- **POST /signup**: Create a new user.
-    - Request Body: `UserCreate`
-    - Response: `{"message": "User created successfully", "uid": "user_uid"}`
-
-- **POST /login**: Log in a user.
-    - Request Body: `UserLogin`
-    - Response: `{"message": "Login successful", "token": "id_token"}`
-
-- **DELETE /delete**: Delete a user account.
-    - Query Parameter: `user_id`
-    - Response: `{"message": "Your user deleted successfully"}`
-
-- **PATCH /update**: Update a user account.
-    - Query Parameter: `user_id`
-    - Request Body: `UserCreate`
-    - Response: `{"message": "Your account has been updated successfully"}`
-
-- **GET /profile**: Retrieve a user account.
-    - Query Parameter: `user_id`
-    - Response: User data
-
-### Expense Endpoints
-
-- **POST /add**: Add a new expense.
-    - Request Body: `Expense`
-    - Response: `{"message": "Expense added successfully"}`
-
-- **DELETE /delete**: Delete an expense.
-    - Query Parameter: `expense_id`
-    - Response: `{"message": "Expense deleted successfully"}`
-
-- **PATCH /update**: Update an expense.
-    - Query Parameter: `expense_id`
-    - Request Body: `Expense`
-    - Response: `{"message": "Expense updated successfully"}`
-
-- **GET /retrieve**: Retrieve an expense.
-    - Query Parameter: `expense_id`
-    - Response: Expense data
-
-this list will be updated soon
 
 ## License
 
