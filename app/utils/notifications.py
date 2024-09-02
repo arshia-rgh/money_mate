@@ -24,12 +24,11 @@ class NotificationHandle:
             pass
 
     async def new_notification(self, notification: Notification):
-        notification_data = serialize_item(notification)
-        notification_data["created_at"] = datetime.now()
-        notification_data["updated_at"] = datetime.now()
-        notification_data["user_id"] = self.user_id
+        notification.created_at = datetime.now()
+        notification.updated_at = datetime.now()
+        notification.user_id = self.user_id
 
-        await realtime_db.child("notifications").push(notification_data)
+        realtime_db.child("notifications").push(serialize_item(notification))
 
         subject = notification.title
         body = notification.message
