@@ -30,11 +30,11 @@ class NotificationHandle:
 
         realtime_db.child("notifications").push(serialize_item(notification))
 
-        subject = notification.title
-        body = notification.message
+        subject = str(notification.title)
+        body = str(notification.message)
         email_to = self.user_email
 
-        await send_mail_async(subject, email_to, body)
+        await send_mail_async(subject=subject, body=body, email_to=email_to)
 
     async def get_notifications(self):
         notifications = []
